@@ -18,7 +18,12 @@ public class LogicServlet extends HttpServlet {
         HttpSession currentSession=req.getSession();
         Field field=extractField(currentSession);
 
-
+        Boolean gameOver=(Boolean) currentSession.getAttribute("gameOver");
+        if (gameOver != null && gameOver) {
+            // Если игра завершена, перенаправляем на игровую страницу
+            resp.sendRedirect("/index.jsp");
+            return;
+        }
         int index = getSelectedIndex(req);
 
         Sign currentSign=field.getField().get(index);
@@ -86,7 +91,7 @@ public class LogicServlet extends HttpServlet {
         if (Sign.CROSS == winner || Sign.NOUGHT == winner) {
             session.setAttribute("winner",winner);
             List<Sign> data=field.getFieldData();
-
+            session.setAttribute("gameOver", true); // Устанавливаем флаг завершения игры
             session.setAttribute("data",data);
 
             response.sendRedirect("/index.jsp");

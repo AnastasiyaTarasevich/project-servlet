@@ -48,6 +48,14 @@
 </c:if>
 
 <script>
+
+    var gameOver = <%= session.getAttribute("gameOver") != null ? session.getAttribute("gameOver") : "false" %>;
+
+    if (gameOver === true) {
+        // Если игра завершена, применяем эффект размытия к игровому полю
+        document.getElementById("gameField").classList.add("blurred");
+    }
+
     function restart() {
         $.ajax({
             url: '/restart',
