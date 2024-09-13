@@ -13,6 +13,8 @@ import java.util.List;
 
 @WebServlet(name = "LogicServlet", value = "/logic")
 public class LogicServlet extends HttpServlet {
+
+    private final MiniMax minimax=new MiniMax();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession currentSession=req.getSession();
@@ -38,25 +40,22 @@ public class LogicServlet extends HttpServlet {
         if (checkWin(resp, currentSession, field)) {
             return;
         }
+
+
         int emptyFieldIndex= field.getEmptyFieldIndex();
-        if(emptyFieldIndex>=0)
-        {
-            field.getField().put(emptyFieldIndex,Sign.NOUGHT);
+        if (emptyFieldIndex >= 0) {
+            // Применяем Minimax для выбора хода компьютера
+            int bestMove = minimax.findBestMove(field);
+            field.getField().put(bestMove, Sign.NOUGHT);
 
             if (checkWin(resp, currentSession, field)) {
                 return;
             }
         }else {
-            // Добавляем в сессию флаг, который сигнализирует что произошла ничья
+
             currentSession.setAttribute("draw", true);
-
-            // Считаем список значков
             List<Sign> data = field.getFieldData();
-
-            // Обновляем этот список в сессии
             currentSession.setAttribute("data", data);
-
-            // Шлем редирект
             resp.sendRedirect("/index.jsp");
             return;
         }

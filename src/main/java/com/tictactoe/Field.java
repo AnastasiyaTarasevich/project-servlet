@@ -59,4 +59,12 @@ public class Field {
         }
         return Sign.EMPTY;
     }
+
+    public List<Integer> getEmptyIndices() {
+        // Получаем все индексы, где состояние клетки - EMPTY
+        return field.entrySet().stream()
+                .filter(entry -> entry.getValue() == Sign.EMPTY)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
 }
